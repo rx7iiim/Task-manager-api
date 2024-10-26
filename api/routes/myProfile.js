@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 const User=require("../models/user");
-const checkaurh = require("../midlleware/checkaurh");
+const checkaurh = require("../midlleware/checkauth");
 router.get("/",checkaurh,(req,res,next)=>{
     const now = new Date();
     const fiveHoursInMs = 5 * 60 * 60 * 1000;
