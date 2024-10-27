@@ -3,12 +3,18 @@ const app = express();
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cors=require("cors")
+const cron=require("node-cron")
 
-const myfruits = require("./api/routes/myfruits.js");
-const rankingRoutes = require("./api/routes/ranking.js");
+
+
 const userRoutes = require("./api/routes/user.js");
-const getfruitroutes = require("./api/routes/getfruit.js");
+const dailyTask = require("./api/routes/mydailytask.js");
+const tasks = require("./api/routes/mytask.js");
 const getprofileroutes =require("./api/routes/myProfile.js")
+
+const Task=require("./api/models/dailytask.js")
+
+
 require('dotenv').config();
 
 const uri=process.env.url;
@@ -38,17 +44,38 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 
+cron.schedule('0 0 * * *', () => {
+  console.log('Running task every 24 hours');
+  deletedailytasks();
+});
 
+// Your function to run
+function deletedailytasks() {
+  let now=new Date
+  let timePassed=null
+  Task.find({}).exec().then(docs=>{
+      docs.map(doc=>{
+      timePassed=now-doc.taskTime
+      if (timePassed>24 * 60 * 60 * 1000){
+        Task.deleteOne({_id:doc._id}).then(res=>{
+          return({msg:"daily tasks of yesterday have been deleted "})
+        })
+      }
+      
+    })
+  })
+  
+
+}
 
 
 
 
 // Routes which should handle requests
 app.use("/user",userRoutes);
-app.use("/myfruits",myfruits);
-app.use("/ranking",rankingRoutes);
-app.use("/getfruit",getfruitroutes);
+app.use("/tasks",dailyTask);
 app.use("/myprofile",getprofileroutes);
+app.use("/mytask",tasks)
 
 app.use((req, res, next) => {
   const error = new Error("Resource not found");

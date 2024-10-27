@@ -62,5 +62,8 @@ router.post("/",checkauth,(req,res,mext)=>{
             err:err
         })})
     })
+    router.delete('/',(req,res,next)=>{
+
+    })
 
     module.exports=router;
