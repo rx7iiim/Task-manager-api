@@ -9,12 +9,12 @@ router.get("/",checkaurh,(req,res,next)=>{
     const fiveHoursInMs = 5 * 60 * 60 * 1000;
    
     let response=null
-    const userEmail=req.userData.email;
-    User.findOne({email:userEmail}).exec().then(resp=>{
+    const userId=req.userData.userId;
+    User.findOne({_id:userId}).exec().then(resp=>{
         response={
             username:resp.userName,
-            score:resp.points,
-            time_remaining:Math.ceil((fiveHoursInMs -  (now - resp.lastRequestTime)) / (60 * 1000)),
+            pfp:resp.pfp,
+            message:"what's up"+resp.userName+"any new tasks or done ones?"
         }
         res.status(200).json(response)
 
