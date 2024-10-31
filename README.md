@@ -48,7 +48,7 @@ env
 npm start
 
 
-##API Endpoints
+## API Endpoints
 - User Authentication
 - POST /api/user/signup: Register a new user
 - POST /api/user/login: Login and receive a token
