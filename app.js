@@ -10,10 +10,9 @@ const cron=require("node-cron")
 const userRoutes = require("./api/routes/user.js");
 const dailyTask = require("./api/routes/mydailytask.js");
 const tasks = require("./api/routes/mytask.js");
-const getprofileroutes =require("./api/routes/myProfile.js")
+const getprofileroutes =require("./api/routes/myProfile.js");
 
 const Task=require("./api/models/dailytask.js")
-
 
 require('dotenv').config();
 
@@ -51,11 +50,11 @@ cron.schedule('0 0 * * *', () => {
 
 // Your function to run
 function deletedailytasks() {
-  let now=new Date
+  let now=new Date()
   let timePassed=null
   Task.find({}).exec().then(docs=>{
       docs.map(doc=>{
-      timePassed=now-doc.taskTime
+      timePassed=now-doc.taskDeleteTime
       if (timePassed>24 * 60 * 60 * 1000){
         Task.deleteOne({_id:doc._id}).then(res=>{
           return({msg:"daily tasks of yesterday have been deleted "})
@@ -64,13 +63,7 @@ function deletedailytasks() {
       
     })
   })
-  
-
 }
-
-
-
-
 // Routes which should handle requests
 app.use("/user",userRoutes);
 app.use("/tasks",dailyTask);
